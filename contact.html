@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><title>Contact · Pages I Never Tore</title><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Courier+Prime&display=swap">
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:#fbf6f0;background-image:radial-gradient(rgba(140,100,90,.07) 1px,transparent 1.3px);background-size:6px 6px;color:#4a3036;font-family:"Newsreader",Georgia,serif;font-size:18px;line-height:1.7;padding:0 16px}
+.wrap{max-width:720px;margin:0 auto;padding:48px 0 80px}
+a{color:#b24f6d}
+.back{font-family:"Courier Prime",monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+.paper{background:#fffaf5;border-radius:6px;padding:clamp(24px,5vw,56px);margin-top:22px;box-shadow:0 14px 30px rgba(110,70,70,.12);position:relative}
+.paper::before{content:"";position:absolute;top:-10px;left:50%;width:90px;height:22px;transform:translateX(-50%) rotate(-3deg);background:repeating-linear-gradient(45deg,#f3b4bb 0 6px,#fce3e6 6px 12px);opacity:.85}
+h1{font-family:"Gloock",Georgia,serif;font-weight:400;color:#5e3440;font-size:clamp(36px,6vw,54px);line-height:1.05;margin:0 0 10px}
+h2{font-family:"Gloock",Georgia,serif;font-weight:400;color:#5e3440;font-size:24px;margin:32px 0 6px}
+.small{font-family:"Courier Prime",monospace;font-size:13px;color:#7a8f6a}
+label{display:block;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7a8f6a;margin:18px 0 6px}
+input,textarea{width:100%;border:1.5px solid rgba(178,79,109,.3);border-radius:12px;padding:12px 14px;font:inherit;background:#fff;color:#4a3036}
+textarea{min-height:160px;resize:vertical}
+button{margin-top:18px;border:0;border-radius:999px;background:#d98c90;color:#fff;font:600 17px "Newsreader",Georgia,serif;padding:12px 24px;cursor:pointer}
+button:hover{background:#c97b7f}
+#status{font-style:italic;color:#b24f6d;margin-top:12px;min-height:28px}
+</style></head><body><div class="wrap">
+<a class="back" href="index.html">← back to the pages</a>
+<div class="paper">
+<h1>Say hi</h1>
+<p>For collaborations, kind words, or asking me to remove a note you posted, write to me here. Only I can read these messages.</p>
+<form id="f">
+<label for="name">Your name, if you'd like</label><input id="name" maxlength="80">
+<label for="reply">Where can I reply? Email or Instagram, optional</label><input id="reply" maxlength="120">
+<label for="text">Your message</label><textarea id="text" maxlength="2000" required></textarea>
+<button type="submit">Send it</button>
+<div id="status" aria-live="polite"></div>
+</form>
+</div></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+const st=document.getElementById("status");
+let db=null;
+try{ if(window.FIREBASE_CONFIG && !FIREBASE_CONFIG.projectId.startsWith("PASTE")){ firebase.initializeApp(FIREBASE_CONFIG); db=firebase.firestore(); } }catch(e){}
+document.getElementById("f").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const text=document.getElementById("text").value.trim(); if(!text) return;
+  if(!db){ st.textContent="The message box isn't connected yet. Please try again later."; return; }
+  st.textContent="Sending…";
+  try{ await db.collection("messages").add({name:document.getElementById("name").value.trim(),reply:document.getElementById("reply").value.trim(),text,at:Date.now()});
+    st.textContent="Sent! Thank you for writing to me."; e.target.reset(); }
+  catch(err){ st.textContent="That didn't send. Please try again in a moment."; }
+});
+</script></body></html>
