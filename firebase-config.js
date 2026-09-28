@@ -1,9 +1,8 @@
-// Step 2 of SETUP-GUIDE.md: replace this whole object with the config Firebase gives you.
 window.FIREBASE_CONFIG = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  storageBucket: "PASTE_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_SENDER_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyD2oMrSBkpeHQ8IXiIkWrWlKL4YnIvLuhU",
+  authDomain: "pages-i-never-tore.firebaseapp.com",
+  projectId: "pages-i-never-tore",
+  storageBucket: "pages-i-never-tore.firebasestorage.app",
+  messagingSenderId: "502252974258",
+  appId: "1:502252974258:web:828d696d33f2412c5899ab"
 };
