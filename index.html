@@ -1105,6 +1105,24 @@ const Store = {
       },()=>{});
     }catch(e){ this.shared=false; }
     this.emit();
+    this.flushLocal();
+  },
+  /* answers saved on this device before the database was connected: send them up once */
+  async flushLocal(){
+    if(!this.db) return;
+    for(const [coll,key] of [["notes","rld-notes"],["whispers","rld-whispers"]]){
+      const items=lsGet(key,[]); if(!items.length) continue;
+      const left=[];
+      for(const it of items){
+        const {id,...data}=it;
+        try{ const ref=this.db.collection(coll).doc(); await ref.set(data); this.mine.add(ref.id); }
+        catch(e){ left.push(it); }
+      }
+      lsSet(key,left); lsSet("rld-mine",[...this.mine]);
+      if(coll==="notes") this.notes=this.notes.filter(n=>!String(n.id).startsWith("local-")||left.some(l=>l.id===n.id));
+      else this.whispers=this.whispers.filter(n=>!String(n.id).startsWith("local-")||left.some(l=>l.id===n.id));
+    }
+    this.emit();
   },
   async add(coll, data){
     data.at=Date.now();
